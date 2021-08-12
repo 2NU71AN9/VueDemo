@@ -13,7 +13,12 @@
 <script>
 export default {
   name: "All",
-  props: ["dataArray", "checkAll", "clearAll"],
+  props: ["dataArray"],
+  methods: {
+    clearAll() {
+      this.$emit("clearAll");
+    },
+  },
   computed: {
     doneNum() {
       return this.dataArray.reduce((i, v) => i + (v.done ? 1 : 0), 0);
@@ -26,7 +31,7 @@ export default {
         return this.doneNum === this.allNum && this.allNum > 0;
       },
       set(value) {
-        this.checkAll(value);
+        this.$emit("checkAll", value);
       },
     },
   },

@@ -13,12 +13,11 @@ import { nanoid } from "nanoid";
 
 export default {
   name: "Add",
-  props: ["addTodo"],
   methods: {
     addAction(e) {
       if (!e.target.value.trim()) return alert("内容不能为空");
       const obj = { id: nanoid(), title: e.target.value, done: false };
-      this.addTodo(obj);
+      this.$emit("addTodo", obj);
       e.target.value = "";
     },
   },

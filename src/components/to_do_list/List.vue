@@ -1,12 +1,6 @@
 <template>
   <ul class="todo-main">
-    <Item
-      v-for="val in dataArray"
-      :key="val.id"
-      :model="val"
-      :checkTodo="checkTodo"
-      :deleteTodo="deleteTodo"
-    />
+    <Item v-for="val in dataArray" :key="val.id" :model="val" />
   </ul>
 </template>
 
@@ -15,7 +9,7 @@ import Item from "./Item.vue";
 export default {
   name: "List",
   components: { Item },
-  props: ["dataArray", "checkTodo", "deleteTodo"],
+  props: ["dataArray"],
 };
 </script>
 

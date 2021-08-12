@@ -2,19 +2,16 @@
   <div id="root">
     <div class="todo-container">
       <div class="todo-wrap">
-        <Add :addTodo="addTodo" />
-        <List
-          :dataArray="dataArray"
-          :checkTodo="checkTodo"
-          :deleteTodo="deleteTodo"
-        />
-        <All :dataArray="dataArray" :checkAll="checkAll" :clearAll="clearAll" />
+        <Add @addTodo="addTodo" />
+        <List :dataArray="dataArray" />
+        <All :dataArray="dataArray" @checkAll="checkAll" @clearAll="clearAll" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import pubsub from "pubsub-js";
 import Add from "./components/to_do_list/Add";
 import All from "./components/to_do_list/All";
 import List from "./components/to_do_list/List";
@@ -28,12 +25,7 @@ export default {
   },
   data() {
     return {
-      dataArray: [
-        { id: "001", title: "待办1", done: false },
-        { id: "002", title: "待办2", done: true },
-        { id: "003", title: "待办3", done: false },
-        { id: "004", title: "待办4", done: false },
-      ],
+      dataArray: JSON.parse(localStorage.getItem("todos")) || [],
     };
   },
   methods: {
@@ -45,7 +37,7 @@ export default {
         if (todo.id === id) todo.done = !todo.done;
       });
     },
-    deleteTodo(id) {
+    deleteTodo(_, id) {
       this.dataArray = this.dataArray.filter((todo) => todo.id !== id);
     },
     checkAll(check) {
@@ -54,6 +46,31 @@ export default {
     clearAll() {
       this.dataArray = this.dataArray.filter((todo) => !todo.done);
     },
+    updateTodo(id, title) {
+      this.dataArray.forEach((todo) => {
+        if (todo.id === id) todo.title = title;
+      });
+    },
+  },
+  watch: {
+    dataArray: {
+      deep: true,
+      handler(value) {
+        localStorage.setItem("todos", JSON.stringify(value));
+      },
+    },
+  },
+  mounted() {
+    // 使用全局事件总线
+    this.$bus.$on("checkTodo", this.checkTodo);
+    this.$bus.$on("updateTodo", this.updateTodo);
+    // this.$bus.$on("deleteTodo", this.deleteTodo);
+    // 使用消息发布与订阅
+    this.pubId = pubsub.subscribe("deleteTodo", this.deleteTodo);
+  },
+  beforeDestroy() {
+    this.$bus.$off(["checkTodo", "updateTodo"]);
+    pubsub.unsubscribe(this.pubId);
   },
 };
 </script>
@@ -82,7 +99,12 @@ body {
   background-color: #da4f49;
   border: 1px solid #bd362f;
 }
-
+.btn-edit {
+  color: #fff;
+  background-color: #49c4da;
+  border: 1px solid #08c3e4;
+  margin-right: 5px;
+}
 .btn-danger:hover {
   color: #fff;
   background-color: #bd362f;
