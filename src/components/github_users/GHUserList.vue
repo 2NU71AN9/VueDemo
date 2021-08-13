@@ -36,6 +36,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this);
     this.$bus.$on("refreshData", this.refreshData);
   },
   beforeDestroy() {
