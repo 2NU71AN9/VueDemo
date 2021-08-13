@@ -1,10 +1,18 @@
 <template>
   <ul class="todo-main">
-    <Item v-for="val in dataArray" :key="val.id" :model="val" />
+    <transition-group
+      name="animate__animated animate__bounce"
+      enter-active-class="animate__bounceInRight"
+      leave-active-class="animate__bounceOutRight"
+      appear
+    >
+      <Item v-for="val in dataArray" :key="val.id" :model="val" />
+    </transition-group>
   </ul>
 </template>
 
 <script>
+import "animate.css";
 import Item from "./Item.vue";
 export default {
   name: "List",
