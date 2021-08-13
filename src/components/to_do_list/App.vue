@@ -12,9 +12,9 @@
 
 <script>
 import pubsub from "pubsub-js";
-import Add from "./components/to_do_list/Add";
-import All from "./components/to_do_list/All";
-import List from "./components/to_do_list/List";
+import Add from "./Add";
+import All from "./All";
+import List from "./List";
 
 export default {
   name: "App",
