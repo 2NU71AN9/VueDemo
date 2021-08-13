@@ -22,15 +22,27 @@ export default {
   },
   methods: {
     searchAction() {
-      this.$bus.$emit("refreshData", [], true);
+      this.$bus.$emit("refreshData", {
+        isLoading: true,
+        errMsg: "",
+        users: [],
+      });
       axios.get(`https://api.github.com/search/users?q=${this.keyword}`).then(
         (response) => {
           console.log("请求成功");
-          this.$bus.$emit("refreshData", response.data.items, false);
+          this.$bus.$emit("refreshData", {
+            isLoading: false,
+            errMsg: "",
+            users: response.data.items,
+          });
         },
         (error) => {
           console.log("请求失败", error.message);
-          this.$bus.$emit("refreshData", [], false, error.message);
+          this.$bus.$emit("refreshData", {
+            isLoading: false,
+            errMsg: error.message,
+            users: [],
+          });
         }
       );
     },

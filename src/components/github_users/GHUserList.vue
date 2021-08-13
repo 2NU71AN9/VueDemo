@@ -2,8 +2,8 @@
   <div class="row">
     <div
       class="card"
-      v-show="users.length"
-      v-for="user in users"
+      v-show="info.users.length"
+      v-for="user in info.users"
       :key="user.login"
     >
       <a :href="user.html_url" target="_blank">
@@ -11,9 +11,9 @@
       </a>
       <p class="card-text">{{ user.login }}</p>
     </div>
-    <h1 v-show="isFirst">欢迎!</h1>
-    <h1 v-show="isLoading">Loading.....</h1>
-    <h1 v-show="errMsg">{{ errMsg }}</h1>
+    <h1 v-show="info.isFirst">欢迎!</h1>
+    <h1 v-show="info.isLoading">Loading.....</h1>
+    <h1 v-show="info.errMsg">{{ info.errMsg }}</h1>
   </div>
 </template>
 
@@ -21,18 +21,18 @@
 export default {
   data() {
     return {
-      isFirst: true,
-      isLoading: false,
-      errMsg: "",
-      users: [],
+      info: {
+        isFirst: true,
+        isLoading: false,
+        errMsg: "",
+        users: [],
+      },
     };
   },
   methods: {
-    refreshData(users, isLoading, errMsg) {
-      this.isFirst = false;
-      this.isLoading = isLoading;
-      this.errMsg = errMsg;
-      this.users = users;
+    refreshData(obj) {
+      this.info.isFirst = false;
+      this.info = { ...this.info, ...obj };
     },
   },
   mounted() {
